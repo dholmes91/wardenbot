@@ -1,6 +1,10 @@
 import discord
 from discord.ext import commands
 import random
+import json
+
+with open('config.json', 'r') as cfg:
+    data = json.load(cfg)
 
 intents = discord.Intents.default()
 intents.members = True
@@ -46,4 +50,4 @@ async def roll(ctx, dice: str):
     await ctx.send(result)
 
 
-bot.run('')
+bot.run(data['token'])
