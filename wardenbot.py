@@ -1,9 +1,12 @@
 import discord
 from discord.ext import commands
 import random
+from pathlib import Path
 import json
 
-json_path = 'E:/Projects/wardenbot/config.json'
+script_path = Path(__file__).resolve()
+
+json_path = script_path.parent / 'config.json'
 
 with open(json_path, 'r') as cfg:
     data = json.load(cfg)
