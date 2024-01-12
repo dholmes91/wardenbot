@@ -12,17 +12,12 @@ intents = discord.Intents.default()
 intents.members = True
 intents.message_content = True
 
-
 bot = commands.Bot(command_prefix='?', intents=intents)
 
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user} (ID: {bot.user.id})')
     print('------')
-
-@bot.command()
-async def test(ctx, arg):
-    await ctx.send(arg)
 
 @bot.event
 async def on_message(message):
@@ -33,9 +28,14 @@ async def on_message(message):
             await message.channel.send("Nominal!")
     await bot.process_commands(message)
 
+#Test function
+@bot.command()
+async def test(ctx, arg):
+    await ctx.send(arg)
+
+#Rolls a dice in NdN format.
 @bot.command()
 async def roll(ctx, dice: str):
-    """Rolls a dice in NdN format."""
     try:
         rolls, limit = map(int, dice.split('d'))
     except Exception:
