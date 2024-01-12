@@ -3,7 +3,9 @@ from discord.ext import commands
 import random
 import json
 
-with open('config.json', 'r') as cfg:
+json_path = 'E:/Projects/wardenbot/config.json'
+
+with open(json_path, 'r') as cfg:
     data = json.load(cfg)
 
 intents = discord.Intents.default()
@@ -18,6 +20,10 @@ async def on_ready():
     print(f'Logged in as {bot.user} (ID: {bot.user.id})')
     print('------')
 
+@bot.command()
+async def test(ctx, arg):
+    await ctx.send(arg)
+
 @bot.event
 async def on_message(message):
     if message.author.bot:
@@ -25,17 +31,7 @@ async def on_message(message):
     else:
         if f'<@{bot.user.id}>' in message.content and 'report' in message.content:
             await message.channel.send("Nominal!")
-    
-
-
-"""@bot.event
-async def on_message(message):
-    mention = f'<@!{bot.user.id}>'
-    if mention in message.content and 'report' in message.content:
-        print("bot mentioned and 'report' found in the message!")
-        await message.channel.send("Nominal!")
-    else:
-        print("bot mentioned, but 'report' not found or not in the correct format")"""
+    await bot.process_commands(message)
 
 @bot.command()
 async def roll(ctx, dice: str):
@@ -45,8 +41,14 @@ async def roll(ctx, dice: str):
     except Exception:
         await ctx.send('Format has to be in NdN!')
         return
+    
+    rolling_message = f'Rolling {rolls}d{limit}...'
+    await ctx.send(rolling_message)
+    
+    individual_rolls = [random.randint(1, limit) for r in range(rolls)]
+    dicetotal = sum(individual_rolls)
 
-    result = ', '.join(str(random.randint(1, limit)) for r in range(rolls))
+    result = f'{", ".join(map(str, individual_rolls))} = {dicetotal}'
     await ctx.send(result)
 
 
