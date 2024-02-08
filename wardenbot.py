@@ -26,9 +26,9 @@ async def on_ready():
 async def on_message(message):
     if message.author.bot:
         return
-    else:
-        if f'<@{bot.user.id}>' in message.content and 'report' in message.content:
-            await message.channel.send("Nominal!")
+
+    if f'<@{bot.user.id}>' in message.content and 'report' in message.content:
+        await message.channel.send("Nominal!")
     await bot.process_commands(message)
 
 #Test function
