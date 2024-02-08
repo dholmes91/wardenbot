@@ -3,6 +3,8 @@ from discord.ext import commands
 import random
 from pathlib import Path
 import json
+import requests
+
 
 script_path = Path(__file__).resolve()
 
@@ -36,23 +38,18 @@ async def on_message(message):
 async def test(ctx, arg):
     await ctx.send(arg)
 
-#Rolls a dice in NdN format.
-@bot.command()
-async def roll(ctx, dice: str):
-    try:
-        rolls, limit = map(int, dice.split('d'))
-    except Exception:
-        await ctx.send('Format has to be in NdN!')
-        return
-    
-    rolling_message = f'Rolling {rolls}d{limit}...'
-    await ctx.send(rolling_message)
-    
-    individual_rolls = [random.randint(1, limit) for r in range(rolls)]
-    dicetotal = sum(individual_rolls)
+def check_war_state():
+    url = 'https://war-service-live.foxholeservices.com/api/worldconquest/war'
+    response = requests.get(url)
 
-    result = f'{", ".join(map(str, individual_rolls))} = {dicetotal}'
-    await ctx.send(result)
+    if response.status_code == 200:
+        war_data = response.json()
+        war_state = war_data['warReport']['warState']
+        print(f'Current war state: {war_state}')
+    else:
+        print(f'Error: {response.status_code}')
 
+if __name__ == "__main__":
+    check_war_state()
 
 bot.run(data['token'])
