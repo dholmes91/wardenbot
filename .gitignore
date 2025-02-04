@@ -1,2 +1,5 @@
 /wardenbot_env
 config.json
+node_modules
+.env
+/node_modules
